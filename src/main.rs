@@ -6,7 +6,43 @@ use std::path::Path;
 
 const PATH_STR: &'static str = "/home/adam/devel/rust/csv_reader/abalone.data";
 
-struct AbaloneResult {}
+#[derive(Debug)]
+struct AbaloneResult {
+    sex: char,
+    length: f32,
+    diameter: f32,
+    height: f32,
+    w_whole: f32,
+    w_shucked: f32,
+    w_viscera: f32,
+    w_shell: f32,
+    rings: i32,
+}
+
+impl AbaloneResult {
+    fn new(sex: char,
+           length: f32,
+           diameter: f32,
+           height: f32,
+           w_whole: f32,
+           w_shucked: f32,
+           w_viscera: f32,
+           w_shell: f32,
+           rings: i32)
+           -> AbaloneResult {
+        AbaloneResult {
+            sex: sex,
+            length: length,
+            diameter: diameter,
+            height: height,
+            w_whole: w_whole,
+            w_shucked: w_shucked,
+            w_viscera: w_viscera,
+            w_shell: w_shell,
+            rings: rings,
+        }
+    }
+}
 
 fn main() {
     let path = Path::new(PATH_STR);
