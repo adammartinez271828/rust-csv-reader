@@ -46,17 +46,30 @@ impl AbaloneResult {
 
 fn main() {
     let path = Path::new(PATH_STR);
-    let display = path.display();
 
     let file = match File::open(&path) {
-        Err(why) => panic!("couldn't open {}: {}", display, why.description()),
+        Err(why) => panic!("couldn't open {}: {}", path.display(), why.description()),
         Ok(file) => file,
     };
-    let mut reader = BufReader::new(file);
-    let mut buffer = String::new();
+    let reader = BufReader::new(file);
 
-    // read a line into buffer
-    reader.read_line(&mut buffer);
+    let mut abalones = std::vec::Vec::<AbaloneResult>::new();
 
-    println!("{}", buffer);
+    for line in reader.lines() {
+        let l = line.unwrap();
+        let m: Vec<&str> = l.split(',').collect();
+        let n = &m[..];
+        let ab = AbaloneResult::new(n[0].chars().nth(0).unwrap(),
+                                    n[1].parse::<f32>().unwrap(),
+                                    n[2].parse::<f32>().unwrap(),
+                                    n[3].parse::<f32>().unwrap(),
+                                    n[4].parse::<f32>().unwrap(),
+                                    n[5].parse::<f32>().unwrap(),
+                                    n[6].parse::<f32>().unwrap(),
+                                    n[7].parse::<f32>().unwrap(),
+                                    n[8].parse::<i32>().unwrap());
+        abalones.push(ab);
+    }
+
+    println!("{:?}", &abalones[2..5]);
 }
