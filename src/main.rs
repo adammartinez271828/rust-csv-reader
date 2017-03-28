@@ -79,5 +79,5 @@ fn main() {
 
     process(&mut abalones, path);
 
-    println!("{:?}", &abalones[2..5]);
+    println!("{:#?}", &abalones[2..5]);
 }
