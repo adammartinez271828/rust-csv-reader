@@ -3,6 +3,7 @@ use std::fs::File;
 use std::io::BufRead;
 use std::io::BufReader;
 use std::path::Path;
+use std::vec::Vec;
 
 const PATH_STR: &'static str = "/home/adam/devel/rust/csv_reader/abalone.data";
 
@@ -44,16 +45,14 @@ impl AbaloneResult {
     }
 }
 
-fn main() {
-    let path = Path::new(PATH_STR);
+/// Process the dataset
+fn process(abalones: &mut Vec<AbaloneResult>, path: &Path) {
 
     let file = match File::open(&path) {
         Err(why) => panic!("couldn't open {}: {}", path.display(), why.description()),
         Ok(file) => file,
     };
     let reader = BufReader::new(file);
-
-    let mut abalones = std::vec::Vec::<AbaloneResult>::new();
 
     for (line_no, line) in reader.lines().enumerate() {
         let errmsg_string = format!("Failed to unwrap {}:{}", path.display(), line_no);
@@ -72,6 +71,13 @@ fn main() {
                                     n[8].parse::<i32>().expect(errmsg));
         abalones.push(ab);
     }
+}
+
+fn main() {
+    let path = Path::new(PATH_STR);
+    let mut abalones = Vec::<AbaloneResult>::new();
+
+    process(&mut abalones, path);
 
     println!("{:?}", &abalones[2..5]);
 }
