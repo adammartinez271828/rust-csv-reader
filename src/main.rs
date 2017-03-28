@@ -55,19 +55,21 @@ fn main() {
 
     let mut abalones = std::vec::Vec::<AbaloneResult>::new();
 
-    for line in reader.lines() {
-        let l = line.unwrap();
+    for (line_no, line) in reader.lines().enumerate() {
+        let errmsg_string = format!("Failed to unwrap {}:{}", path.display(), line_no);
+        let errmsg = errmsg_string.as_str();
+        let l = line.expect(errmsg);
         let m: Vec<&str> = l.split(',').collect();
         let n = &m[..];
-        let ab = AbaloneResult::new(n[0].chars().nth(0).unwrap(),
-                                    n[1].parse::<f32>().unwrap(),
-                                    n[2].parse::<f32>().unwrap(),
-                                    n[3].parse::<f32>().unwrap(),
-                                    n[4].parse::<f32>().unwrap(),
-                                    n[5].parse::<f32>().unwrap(),
-                                    n[6].parse::<f32>().unwrap(),
-                                    n[7].parse::<f32>().unwrap(),
-                                    n[8].parse::<i32>().unwrap());
+        let ab = AbaloneResult::new(n[0].chars().nth(0).expect(errmsg),
+                                    n[1].parse::<f32>().expect(errmsg),
+                                    n[2].parse::<f32>().expect(errmsg),
+                                    n[3].parse::<f32>().expect(errmsg),
+                                    n[4].parse::<f32>().expect(errmsg),
+                                    n[5].parse::<f32>().expect(errmsg),
+                                    n[6].parse::<f32>().expect(errmsg),
+                                    n[7].parse::<f32>().expect(errmsg),
+                                    n[8].parse::<i32>().expect(errmsg));
         abalones.push(ab);
     }
 
