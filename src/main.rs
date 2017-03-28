@@ -46,7 +46,8 @@ impl AbaloneResult {
 }
 
 /// Process the dataset
-fn process(abalones: &mut Vec<AbaloneResult>, path: &Path) {
+fn process(path: &Path) -> Vec<Vec<String>> {
+    let mut rows = Vec::<Vec<String>>::new();
 
     let file = match File::open(&path) {
         Err(why) => panic!("couldn't open {}: {}", path.display(), why.description()),
@@ -55,29 +56,21 @@ fn process(abalones: &mut Vec<AbaloneResult>, path: &Path) {
     let reader = BufReader::new(file);
 
     for (line_no, line) in reader.lines().enumerate() {
-        let errmsg_string = format!("Failed to unwrap {}:{}", path.display(), line_no);
-        let errmsg = errmsg_string.as_str();
-        let l = line.expect(errmsg);
-        let m: Vec<&str> = l.split(',').collect();
-        let n = &m[..];
-        let ab = AbaloneResult::new(n[0].chars().nth(0).expect(errmsg),
-                                    n[1].parse::<f32>().expect(errmsg),
-                                    n[2].parse::<f32>().expect(errmsg),
-                                    n[3].parse::<f32>().expect(errmsg),
-                                    n[4].parse::<f32>().expect(errmsg),
-                                    n[5].parse::<f32>().expect(errmsg),
-                                    n[6].parse::<f32>().expect(errmsg),
-                                    n[7].parse::<f32>().expect(errmsg),
-                                    n[8].parse::<i32>().expect(errmsg));
-        abalones.push(ab);
+        let errmsg = format!("Failed to unwrap {}:{}", path.display(), line_no);
+        let row: Vec<String> = line.expect(errmsg.as_str())
+            .split(',')
+            .map(String::from)
+            .collect();
+        rows.push(row);
     }
+
+    rows
 }
 
 fn main() {
     let path = Path::new(PATH_STR);
-    let mut abalones = Vec::<AbaloneResult>::new();
 
-    process(&mut abalones, path);
+    let abalones = process(path);
 
     println!("{:#?}", &abalones[2..5]);
 }
